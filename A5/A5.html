@@ -1,0 +1,131 @@
+<html>
+<head>
+  <style>
+    body{
+      margin: 0px;
+    }
+    .slide{
+      position: absolute;
+	  display: inline-block;
+      background-size: contain;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 90%;
+	  transition: 100ms margin-left linear; 
+    }
+    #numWrapper button{
+      font-size: 25px;
+    }
+    #numWrapper button.active{
+      background:gold;
+    }
+    #numWrapper{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 50px;
+      width: 100%;
+      text-align: center;
+	  object-fit: fill;
+    }
+	
+	#wrapper{
+		transition: .5s margin-left linear;
+	}
+	
+	
+  </style>
+  
+  <script>
+	  
+  function shakeCurrSlide(){
+	  var delay = 0;
+	  for(i=0; i<3;i++){
+		  setTimeout(function(){document.getElementById("img" + currSlide).style.marginLeft = ".5%"}, delay);
+		  delay += 100
+		  setTimeout(function(){document.getElementById("img" + currSlide).style.marginLeft = "0%"}, delay);
+		  delay += 100
+	  }
+  }
+  var allImages = [];
+    //js here
+    currSlide = 0;
+    function goPrev(){
+      if(currSlide > 0){
+        currSlide = currSlide - 1;
+        renderSlide();
+      }
+      else{
+        shakeCurrSlide();
+      }
+    }
+
+    function goNext(){
+      if(currSlide < allImages.length-1){
+        currSlide = currSlide + 1;
+        renderSlide();
+      }
+      else{
+		  renderSlide();
+        shakeCurrSlide();
+      }
+    }
+
+ 
+
+	function renderSlide(){
+		
+	for(var i = 0; i < allImages.length; i++){
+		if(i == currSlide){
+			document.getElementById("button" + i).className = "active";
+			document.getElementById("img" + i).style.marginLeft = "0%";
+		}
+		else{
+			document.getElementById("button" + i).className = "";
+			if(i > currSlide){
+				document.getElementById("img" + i).style.marginLeft = "100%";
+				
+			}
+			else{
+				document.getElementById("img" + i).style.marginLeft = "-100%";
+				
+			}
+		}
+	}
+}
+
+		  
+      
+   
+
+    function initSlides(){
+      allImages = window.location.hash.replace("#","").split(",");
+      var markup = "";
+      var nummarkup = "";
+      for(var i = 0; i < allImages.length; i++){
+        markup += "<div class='slide' id='img" + i + "' style='background-image:url(" + allImages[i] + ")'></div>";
+        nummarkup += "<button id='button" + i + "' onclick='gotoSlide(" + i + ")'>" + (i+1) + "</button>";
+      }
+
+      document.getElementById("wrapper").innerHTML = markup;
+      document.getElementById("numWrapper").innerHTML = nummarkup;
+      renderSlide();
+    }
+
+    function gotoSlide(s){
+      currSlide = s;
+      renderSlide();
+  }
+  </script>
+</head>
+
+<body onload='initSlides()'>
+  <button onclick='goPrev()'>Back</button>
+  <button style='float: right' onclick='goNext()'>Next</button>
+
+  <div id='wrapper'>  </div>
+  <div id='numWrapper'>  </div>
+
+</body>
+</html>
